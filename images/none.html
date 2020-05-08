@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Here API</title>
+
+		<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+
+		<script src="http://js.api.here.com/v3/3.0/mapsjs-core.js"
+		  type="text/javascript" charset="utf-8"></script>
+		<script src="http://js.api.here.com/v3/3.0/mapsjs-service.js"
+		  type="text/javascript" charset="utf-8"></script>
+		 <script src="http://js.api.here.com/v3/3.0/mapsjs-mapevents.js" 
+     		type="text/javascript" charset="utf-8"></script>
+     	<script src="http://js.api.here.com/v3/3.0/mapsjs-ui.js" 
+      		type="text/javascript" charset="utf-8"></script>
+	    <link rel="stylesheet" type="text/css" 
+	      href="http://js.api.here.com/v3/3.0/mapsjs-ui.css" />
+
+		<style type="text/css">
+			html,body{
+				width: 100%; 
+				height:100%;
+				margin: 0px;
+			}
+			#map{
+				width: 100%; 
+				height:100%;
+			}
+			#geolocation{
+				position: absolute;
+			    top: 100px;
+			    right: 7px;
+			    width: auto;
+			    height: 20px;
+			    background-color: #1f262a;
+			    border-radius: 22px;
+			    color: #fff;
+			    padding: 6px;
+			    cursor:pointer;
+			}
+			#geolocation:hover{
+				color:#1f262a;
+				background-color: white;
+				border:1px solid #1f262a;
+			}
+			.active{
+				color:#1f262a !important;
+				background-color: white !important;
+				border:1px solid #1f262a !important; 
+			}
+			
+		</style>
+	</head>
+	<body>
+		<div id='map'></div>
+		
+		<div id="geolocation">Geolocation</div>
+		
+		<script type="text/javascript">
+			var platform = new H.service.Platform({
+			  'app_id': 'u1JcKwu147yPqoFGu59J',
+			  'app_code': 'fmbG3v2W2rE2ooP7UEjMMg'
+			});
+
+			var defaultLayers = platform.createDefaultLayers();
+
+			var map = new H.Map(
+				document.getElementById('map'),
+				defaultLayers.normal.map,
+				{
+					zoom:7,
+					center:{
+						lat:47,
+						lng:39
+					}
+				}
+			);
+
+			var mapEvents = new H.mapevents.MapEvents(map);
+
+			var behavior = new H.mapevents.Behavior(mapEvents);
+			
+			var ui = new H.ui.UI.createDefault(map, defaultLayers);
+
+			
+
+
+			var geoloc = document.getElementById('geolocation');
+
+			var onClick = function(){
+				if(geoloc.className != 'active'){
+					
+					geoloc.className = 'active';
+					
+					navigator.geolocation.getCurrentPosition(function(position){
+						window.marker = new H.map.Marker({lat:position.coords.latitude,lng:position.coords.longitude});
+						map.addObject(marker);
+					})
+				}else{
+					// debugger;
+					geoloc.className = '';
+					map.removeObject(marker);
+				}
+				
+			};
+
+
+
+			geoloc.addEventListener('click',onClick);
+
+		</script>
+	</body>
+</html>
